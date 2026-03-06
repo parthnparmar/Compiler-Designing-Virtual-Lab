@@ -1,0 +1,97 @@
+@model Compiler_Designing_Virtual_Lab.Models.ParserModel
+@{
+    ViewData["Title"] = "LL(1) Parser";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input Grammar & String
+            </div>
+            <div class="card-body">
+                <form method="post" asp-action="LL1Parser">
+                    <div class="mb-3">
+                        <label class="form-label">Grammar</label>
+                        <textarea name="grammar" class="form-control" rows="6" placeholder="E -> T E'&#10;E' -> + T E' | ε&#10;T -> id" required>@Model?.Grammar</textarea>
+                        <small class="form-text text-muted">One production per line. Use -> for productions, | for alternatives, ε or epsilon for empty</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Input String</label>
+                        <input type="text" name="input" class="form-control" placeholder="id + id" value="@Model?.Input" required />
+                        <small class="form-text text-muted">Space-separated tokens (e.g., id + id)</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-play"></i> Parse
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.FirstSet != null)
+    {
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-list"></i> FIRST Sets
+                        </div>
+                        <div class="card-body">
+                            @foreach (var kvp in Model.FirstSet)
+                            {
+                                <div class="step-box">
+                                    <strong>FIRST(@kvp.Key):</strong> { @string.Join(", ", kvp.Value) }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-list"></i> FOLLOW Sets
+                        </div>
+                        <div class="card-body">
+                            @foreach (var kvp in Model.FollowSet)
+                            {
+                                <div class="step-box">
+                                    <strong>FOLLOW(@kvp.Key):</strong> { @string.Join(", ", kvp.Value) }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i> LL(1) Parsing Table
+                </div>
+                <div class="card-body">
+                    @Html.Raw(Model.ParsingTable)
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-stream"></i> Parsing Steps
+                </div>
+                <div class="card-body">
+                    @Html.Raw(string.Join("", Model.ParseSteps))
+                </div>
+            </div>
+
+            <div class="final-answer">
+                <i class="fas fa-check-circle"></i> String Parsed Successfully using LL(1) Parser
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

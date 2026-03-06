@@ -1,0 +1,85 @@
+@model Compiler_Designing_Virtual_Lab.Models.SLRParserModel
+@{
+    ViewData["Title"] = "SLR Parser";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input Grammar & String
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Grammar</label>
+                        <textarea name="grammar" class="form-control" rows="6" placeholder="S -> a" required>@Model?.Grammar</textarea>
+                        <small class="form-text text-muted">One production per line. Use -> for productions. Example: S -> a</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Input String</label>
+                        <input type="text" name="input" class="form-control" placeholder="a" value="@Model?.Input" required />
+                        <small class="form-text text-muted">Space-separated tokens</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-play"></i> Parse
+                    </button>
+                </form>
+                
+                @if (ViewData.ModelState.Count > 0 && !ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger mt-3">
+                        @Html.ValidationSummary()
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.ParseSteps != null)
+    {
+        <div class="col-lg-8">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-list"></i> Augmented Grammar
+                </div>
+                <div class="card-body">
+                    <pre>@Model.AugmentedGrammar</pre>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-sitemap"></i> LR(0) Items (Canonical Collection)
+                </div>
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    @Html.Raw(Model.LR0Items)
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i> SLR Parsing Table
+                </div>
+                <div class="card-body" style="overflow-x: auto;">
+                    @Html.Raw(Model.ParsingTable)
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-layer-group"></i> Parsing Trace
+                </div>
+                <div class="card-body">
+                    @Html.Raw(string.Join("", Model.ParseSteps))
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

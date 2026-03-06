@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Compiler Design Virtual Lab</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-code"></i> Compiler Lab</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li><a asp-controller="Compiler" asp-action="Index"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="section-title">Finite Automata</li>
+                <li><a asp-controller="Compiler" asp-action="RegexToNfa"><i class="fas fa-project-diagram"></i> Regex → NFA</a></li>
+                <li><a asp-controller="Compiler" asp-action="NfaToDfa"><i class="fas fa-exchange-alt"></i> NFA → DFA</a></li>
+                <li><a asp-controller="Compiler" asp-action="DirectDfa"><i class="fas fa-sitemap"></i> Direct DFA</a></li>
+                <li><a asp-controller="Compiler" asp-action="DfaMinimization"><i class="fas fa-compress"></i> DFA Minimization</a></li>
+                <li class="section-title">Analysis</li>
+                <li><a asp-controller="Compiler" asp-action="LexicalAnalyzer"><i class="fas fa-search"></i> Lexical Analyzer</a></li>
+                <li><a asp-controller="Compiler" asp-action="LL1Parser"><i class="fas fa-stream"></i> LL(1) Parser</a></li>
+                <li><a asp-controller="Compiler" asp-action="SLRParser"><i class="fas fa-layer-group"></i> SLR Parser</a></li>
+                <li class="section-title">Code Generation</li>
+                <li><a asp-controller="Compiler" asp-action="ThreeAddressCode"><i class="fas fa-code-branch"></i> Three Address Code</a></li>
+                <li><a asp-controller="Compiler" asp-action="CodeOptimization"><i class="fas fa-rocket"></i> Code Optimization</a></li>
+                <li><a asp-controller="Compiler" asp-action="CodeGeneration"><i class="fas fa-cogs"></i> Code Generation</a></li>
+                <li class="section-title">Complete Demo</li>
+                <li><a asp-controller="Compiler" asp-action="AllPhases"><i class="fas fa-layer-group"></i> All Compiler Phases</a></li>
+                <li><a asp-controller="Compiler" asp-action="CompilerTheory"><i class="fas fa-book"></i> Theory & Examples</a></li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <span class="navbar-brand ms-3">@ViewData["Title"]</span>
+                    <div class="ms-auto">
+                        <button id="themeToggle" class="btn btn-outline-secondary">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid mt-4">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

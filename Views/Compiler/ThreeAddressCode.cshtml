@@ -1,0 +1,114 @@
+@model Compiler_Designing_Virtual_Lab.Models.ThreeAddressCodeModel
+@{
+    ViewData["Title"] = "Three Address Code Generation";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input Expression
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Expression</label>
+                        <input type="text" name="expression" class="form-control" placeholder="x = a + b * c - d" value="@Model?.Expression" required />
+                        <small class="form-text text-muted">Enter arithmetic expression</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-code-branch"></i> Generate TAC
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.TAC != null)
+    {
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-code"></i> Three Address Code
+                </div>
+                <div class="card-body">
+                    <pre class="bg-light p-3 rounded">@string.Join("\n", Model.TAC)</pre>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i> Quadruples
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Op</th>
+                                    <th>Arg1</th>
+                                    <th>Arg2</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Quadruples.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td><strong>@Model.Quadruples[i].Op</strong></td>
+                                        <td>@Model.Quadruples[i].Arg1</td>
+                                        <td>@Model.Quadruples[i].Arg2</td>
+                                        <td>@Model.Quadruples[i].Result</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i> Triples
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Op</th>
+                                    <th>Arg1</th>
+                                    <th>Arg2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Triples.Count; i++)
+                                {
+                                    <tr>
+                                        <td>(@i)</td>
+                                        <td><strong>@Model.Triples[i].Op</strong></td>
+                                        <td>@Model.Triples[i].Arg1</td>
+                                        <td>@Model.Triples[i].Arg2</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="final-answer">
+                <i class="fas fa-check-circle"></i> Three Address Code Generated for: <strong>@Model.Expression</strong>
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

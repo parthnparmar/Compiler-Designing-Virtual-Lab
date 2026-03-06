@@ -1,0 +1,98 @@
+@model Compiler_Designing_Virtual_Lab.Models.DfaMinimizationModel
+@{
+    ViewData["Title"] = "DFA Minimization";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input DFA
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">DFA Transitions</label>
+                        <textarea name="dfaInput" class="form-control" rows="8" placeholder="Enter DFA transitions&#10;>q0,a,q1&#10;q1*,a,q1" required>@Model?.DfaInput</textarea>
+                        <small class="form-text text-muted">
+                            Format: state,input,nextState<br>
+                            Use <code>&gt;</code> for start state (e.g., <code>&gt;q0</code>)<br>
+                            Use <code>*</code> for final state (e.g., <code>q1*</code>)
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-compress"></i> Minimize DFA
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Partitions != null)
+    {
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-layer-group"></i> Partition Refinement Steps
+                </div>
+                <div class="card-body">
+                    @foreach (var partition in Model.Partitions)
+                    {
+                        <div class="step-box">
+                            <i class="fas fa-arrow-right text-primary"></i> @partition
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-project-diagram"></i> Before Minimization
+                        </div>
+                        <div class="card-body">
+                            <div class="diagram-container">
+                                @Html.Raw(Model.BeforeDiagram)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-project-diagram"></i> After Minimization
+                        </div>
+                        <div class="card-body">
+                            <div class="diagram-container">
+                                @Html.Raw(Model.AfterDiagram)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.AsciiDiagram))
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <i class="fas fa-code"></i> Minimized DFA (Text Format)
+                    </div>
+                    <div class="card-body">
+                        <pre class="bg-light p-3 rounded">@Model.AsciiDiagram</pre>
+                    </div>
+                </div>
+            }
+
+            <div class="final-answer">
+                <i class="fas fa-check-circle"></i> @Model.MinimizedDfa
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,100 @@
+@model Compiler_Designing_Virtual_Lab.Models.LexicalAnalyzerModel
+@{
+    ViewData["Title"] = "Lexical Analyzer";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input Source Code
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Source Code</label>
+                        <textarea name="sourceCode" class="form-control" rows="10" placeholder="int x = 10;&#10;float y = 20.5;&#10;if (x > 5) {&#10;  return x + y;&#10;}" required>@Model?.SourceCode</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Analyze
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Tokens != null)
+    {
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-list"></i> Token Table
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Token Type</th>
+                                    <th>Value</th>
+                                    <th>Line</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Tokens.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td><span class="badge bg-primary">@Model.Tokens[i].Type</span></td>
+                                        <td><code>@Model.Tokens[i].Value</code></td>
+                                        <td>@Model.Tokens[i].Line</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i> Symbol Table
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Symbol Name</th>
+                                    <th>Type</th>
+                                    <th>Scope</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var symbol in Model.SymbolTable)
+                                {
+                                    <tr>
+                                        <td><code>@symbol.Name</code></td>
+                                        <td><span class="badge bg-success">@symbol.Type</span></td>
+                                        <td>@symbol.Scope</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="final-answer">
+                <i class="fas fa-check-circle"></i> Lexical Analysis Complete: <strong>@Model.Tokens.Count</strong> tokens identified
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

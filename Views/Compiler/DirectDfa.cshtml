@@ -1,0 +1,129 @@
+@model Compiler_Designing_Virtual_Lab.Models.DirectDfaModel
+@{
+    ViewData["Title"] = "Direct DFA Construction (Syntax Tree Method)";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-keyboard"></i> Input Regular Expression
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Regular Expression</label>
+                        <input type="text" name="regex" class="form-control form-control-lg" placeholder="e.g., a, ab, a|b, (a|b)*abb" value="@Model?.Regex" required />
+                        <small class="form-text text-muted">Direct DFA construction using syntax tree method</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-sitemap"></i> Generate DFA
+                    </button>
+                </form>
+                
+                @if (ViewData.ModelState.ErrorCount > 0)
+                {
+                    <div class="alert alert-danger mt-3">
+                        @Html.ValidationSummary()
+                    </div>
+                }
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <i class="fas fa-info-circle"></i> Algorithm Steps
+            </div>
+            <div class="card-body">
+                <ol class="small">
+                    <li>Augment regex with # → r#</li>
+                    <li>Build syntax tree</li>
+                    <li>Compute nullable, firstpos, lastpos</li>
+                    <li>Compute followpos for each position</li>
+                    <li>Construct DFA states from firstpos(root)</li>
+                    <li>Mark states containing # position as final</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.ComputedValues != null)
+    {
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <i class="fas fa-tree"></i> Syntax Tree
+                </div>
+                <div class="card-body">
+                    <pre class="bg-light p-3 rounded border" style="font-family: 'Courier New', monospace; font-size: 0.9rem;">@Model.SyntaxTree</pre>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-calculator"></i> Root Node Values
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var kvp in Model.ComputedValues)
+                        {
+                            <div class="col-md-4">
+                                <div class="alert alert-info mb-2">
+                                    <strong>@kvp.Key:</strong><br/>
+                                    <code class="text-dark">@kvp.Value</code>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-warning">
+                    <i class="fas fa-table"></i> Followpos Table
+                </div>
+                <div class="card-body">
+                    @Html.Raw(Model.FollowposTable)
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-table"></i> DFA Transition Table
+                </div>
+                <div class="card-body">
+                    @Html.Raw(Model.DfaTable)
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i> 
+                            Blue row = Start state | Green row = Final state
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <i class="fas fa-project-diagram"></i> DFA Diagram
+                </div>
+                <div class="card-body">
+                    <div class="diagram-container text-center">
+                        @Html.Raw(Model.DiagramSvg)
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success mt-3">
+                <i class="fas fa-check-circle"></i> 
+                <strong>DFA Successfully Generated!</strong><br/>
+                Input: <code>@Model.Regex</code> | Method: Direct Construction (Syntax Tree)
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-danger" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

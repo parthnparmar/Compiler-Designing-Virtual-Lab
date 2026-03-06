@@ -1,0 +1,75 @@
+@model Compiler_Designing_Virtual_Lab.Models.RegexToNfaModel
+@{
+    ViewData["Title"] = "Regular Expression to NFA";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input Regular Expression
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Regular Expression</label>
+                        <input type="text" name="regex" class="form-control" placeholder="e.g., (a|b)*abb" value="@Model?.Regex" required />
+                        <small class="form-text text-muted">Use | for OR, * for Kleene star, . for concatenation</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-play"></i> Generate NFA
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Steps != null)
+    {
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-list-ol"></i> Thompson's Construction Steps
+                </div>
+                <div class="card-body">
+                    @foreach (var step in Model.Steps)
+                    {
+                        <div class="step-box">
+                            <i class="fas fa-check-circle text-success"></i> @step
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i> NFA Transition Table
+                </div>
+                <div class="card-body">
+                    @Html.Raw(Model.TransitionTable)
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-project-diagram"></i> NFA Diagram
+                </div>
+                <div class="card-body">
+                    <div class="diagram-container">
+                        @Html.Raw(Model.DiagramSvg)
+                    </div>
+                </div>
+            </div>
+
+            <div class="final-answer">
+                <i class="fas fa-check-circle"></i> NFA Successfully Generated for: <strong>@Model.Regex</strong>
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

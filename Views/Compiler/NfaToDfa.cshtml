@@ -1,0 +1,93 @@
+@model Compiler_Designing_Virtual_Lab.Models.NfaToDfaModel
+@{
+    ViewData["Title"] = "NFA to DFA Conversion";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input NFA
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">NFA Transitions</label>
+                        <textarea name="nfaInput" class="form-control" rows="8" placeholder="Enter NFA transitions (one per line)&#10;q0,a,q1&#10;q1,b,q2" required>@Model?.NfaInput</textarea>
+                        <small class="form-text text-muted">Format: state,input,nextState</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-exchange-alt"></i> Convert to DFA
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Steps != null)
+    {
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-calculator"></i> ε-Closure Computation
+                </div>
+                <div class="card-body">
+                    @foreach (var closure in Model.EpsilonClosures)
+                    {
+                        <div class="step-box">
+                            <i class="fas fa-arrow-right text-primary"></i> @closure
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-list-ol"></i> Subset Construction Steps
+                </div>
+                <div class="card-body">
+                    @foreach (var step in Model.Steps)
+                    {
+                        <div class="step-box">
+                            <i class="fas fa-check-circle text-success"></i> @step
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i> DFA Transition Table
+                </div>
+                <div class="card-body">
+                    @Html.Raw(Model.DfaTable)
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-project-diagram"></i> DFA Diagram
+                </div>
+                <div class="card-body">
+                    <div class="diagram-container">
+                        @Html.Raw(Model.DiagramSvg)
+                    </div>
+                    <div class="mt-3 p-3 bg-light border rounded">
+                        <h6 class="mb-2"><i class="fas fa-terminal"></i> ASCII Representation:</h6>
+                        <pre class="mb-0" style="font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6;">@Model.AsciiDiagram</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="final-answer">
+                <i class="fas fa-check-circle"></i> DFA Successfully Generated using Subset Construction Method
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

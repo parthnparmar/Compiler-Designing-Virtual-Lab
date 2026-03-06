@@ -1,0 +1,73 @@
+@model Compiler_Designing_Virtual_Lab.Models.CodeGenerationModel
+@{
+    ViewData["Title"] = "Code Generation";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input Code
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Intermediate Code</label>
+                        <textarea name="code" class="form-control" rows="10" placeholder="t1 = a + b&#10;t2 = c * d&#10;t3 = t1 + t2&#10;x = t3" required>@Model?.Code</textarea>
+                        <small class="form-text text-muted">Enter intermediate code</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-cogs"></i> Generate Code
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.BasicBlocks != null)
+    {
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cubes"></i> Basic Blocks
+                </div>
+                <div class="card-body">
+                    @foreach (var block in Model.BasicBlocks)
+                    {
+                        <div class="step-box">
+                            <pre class="mb-0">@block</pre>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-project-diagram"></i> DAG (Directed Acyclic Graph)
+                </div>
+                <div class="card-body">
+                    <pre class="bg-light p-3 rounded" style="font-family: 'Courier New', monospace;">@Model.DagDiagram</pre>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-microchip"></i> Generated Machine Code
+                </div>
+                <div class="card-body">
+                    <pre class="bg-dark text-light p-3 rounded">@Model.GeneratedCode</pre>
+                </div>
+            </div>
+
+            <div class="final-answer">
+                <i class="fas fa-check-circle"></i> Machine Code Successfully Generated
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>

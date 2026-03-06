@@ -1,0 +1,78 @@
+@model Compiler_Designing_Virtual_Lab.Models.OptimizationModel
+@{
+    ViewData["Title"] = "Code Optimization";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-keyboard"></i> Input Code
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Code to Optimize</label>
+                        <textarea name="code" class="form-control" rows="10" placeholder="x = 2 + 3&#10;y = x * 1&#10;z = y + 0&#10;a = b * 2" required>@Model?.Code</textarea>
+                        <small class="form-text text-muted">Enter code with optimization opportunities</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-rocket"></i> Optimize
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.OptimizationSteps != null)
+    {
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-list-ol"></i> Optimization Steps
+                </div>
+                <div class="card-body">
+                    @foreach (var step in Model.OptimizationSteps)
+                    {
+                        <div class="step-box">
+                            <i class="fas fa-check-circle text-success"></i> @step
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <i class="fas fa-code"></i> Before Optimization
+                        </div>
+                        <div class="card-body">
+                            <pre class="bg-light p-3 rounded">@Model.BeforeCode</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <i class="fas fa-code"></i> After Optimization
+                        </div>
+                        <div class="card-body">
+                            <pre class="bg-light p-3 rounded">@Model.AfterCode</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="final-answer">
+                <i class="fas fa-check-circle"></i> Code Successfully Optimized
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+    }
+</div>
